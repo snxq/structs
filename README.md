@@ -1,4 +1,15 @@
-# Archived project. No maintenance. 
+# Forked from [fatih/structs](https://github.com/fatih/structs)
+
+## New feature
+
+- use option define additional functions.
+- - `WithIgnoreZeroValue` field still exists when value is zero.
+- - `WithTagName` use custom tag name.
+- - `WithFields` specify the generated keys.
+
+- - -
+- - - 
+# Archived project. No maintenance.
 
 This project is not maintained anymore and is archived. Feel free to fork and
 make your own changes if needed. For more detail read my blog post: [Taking an indefinite sabbatical from my projects](https://arslan.io/2018/10/09/taking-an-indefinite-sabbatical-from-my-projects/)

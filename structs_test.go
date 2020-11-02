@@ -129,7 +129,7 @@ func TestMap_CustomTag(t *testing.T) {
 	T.D.E = "e-value"
 
 	s := New(T)
-	s.TagName = "json"
+	s.tagName = "json"
 
 	a := s.Map()
 
@@ -170,14 +170,14 @@ func TestMap_MultipleCustomTag(t *testing.T) {
 	}{"a_value"}
 
 	aStruct := New(A)
-	aStruct.TagName = "aa"
+	aStruct.tagName = "aa"
 
 	var B = struct {
 		X string `bb:"bx"`
 	}{"b_value"}
 
 	bStruct := New(B)
-	bStruct.TagName = "bb"
+	bStruct.tagName = "bb"
 
 	a, b := aStruct.Map(), bStruct.Map()
 	if !reflect.DeepEqual(a, map[string]interface{}{"ax": "a_value"}) {
@@ -1342,7 +1342,7 @@ func TestTagWithStringOption(t *testing.T) {
 
 	s := New(address)
 
-	s.TagName = "json"
+	s.tagName = "json"
 	m := s.Map()
 
 	if m["person"] != person.String() {
@@ -1384,7 +1384,7 @@ func TestNonStringerTagWithStringOption(t *testing.T) {
 
 	s := New(d)
 
-	s.TagName = "json"
+	s.tagName = "json"
 	m := s.Map()
 
 	if _, exists := m["animal"]; exists {
@@ -1450,4 +1450,50 @@ func TestMap_InterfaceTypeWithMapValue(t *testing.T) {
 	}()
 
 	_ = Map(a)
+}
+
+func TestMap_WithIgnoreOptions(t *testing.T) {
+	type A struct {
+		Name string `structs:"name"`
+		Age  int    `structs:"age"`
+	}
+
+	a := A{Name: "foo"}
+	m := New(a, WithIgnoreZeroValue()).Map()
+	if _, ok := m["name"]; !ok {
+		t.Error("key [name] should exist")
+	}
+	if _, ok := m["age"]; ok {
+		t.Error("key [age] should not exist")
+	}
+}
+
+func TestMap_WithTagName(t *testing.T) {
+	type A struct {
+		Name string `json:"name"`
+		Age  int    `structs:"age"`
+	}
+	a := A{Name: "foo", Age: 18}
+	m := New(a, WithTagName("json")).Map()
+	if _, ok := m["name"]; !ok {
+		t.Error("key [name] should exist")
+	}
+	if _, ok := m["age"]; ok {
+		t.Error("key [age] should not exist")
+	}
+}
+
+func TestMap_WithFields(t *testing.T) {
+	type A struct {
+		Name string `structs:"name"`
+		Age  int    `structs:"age"`
+	}
+	a := A{Name: "foo", Age: 18}
+	m := New(a, WithFields("name")).Map()
+	if _, ok := m["name"]; !ok {
+		t.Error("key [name] should exist")
+	}
+	if _, ok := m["age"]; ok {
+		t.Error("key [age] should not exist")
+	}
 }
