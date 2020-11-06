@@ -113,11 +113,17 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 			name = tagName
 		}
 
-		if len(s.fields) != 0 && !s.fields.Has(tagName) {
-			continue
-		} else if s.ignoreZero || tagOpts.Has("omitempty") {
-			// if the value is a zero value and the field is marked as omitempty do
-			// not include
+		if len(s.fields) != 0 {
+			s.ignoreZero = false
+			if !s.fields.Has(tagName) {
+				continue
+			}
+		}
+
+		// priority: omitempty > fields > ignore_zero
+		// if the value is a zero value and the field is marked as omitempty do
+		// not include
+		if s.ignoreZero || tagOpts.Has("omitempty") {
 			zero := reflect.Zero(val.Type()).Interface()
 			current := val.Interface()
 

@@ -1488,9 +1488,39 @@ func TestMap_WithFields(t *testing.T) {
 		Name string `structs:"name"`
 		Age  int    `structs:"age"`
 	}
-	a := A{Name: "foo", Age: 18}
+	a := A{Name: "", Age: 18}
 	m := New(a, WithFields("name")).Map()
 	if _, ok := m["name"]; !ok {
+		t.Error("key [name] should exist")
+	}
+	if _, ok := m["age"]; ok {
+		t.Error("key [age] should not exist")
+	}
+}
+
+func TestMap_Opts(t *testing.T) {
+	type A struct {
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+	}
+	a := A{Age: 18}
+	m := New(a, WithFields("name"), WithIgnoreZeroValue(), WithTagName("json")).Map()
+	if _, ok := m["name"]; !ok {
+		t.Error("key [name] should exist")
+	}
+	if _, ok := m["age"]; ok {
+		t.Error("key [age] should not exist")
+	}
+}
+
+func TestMap_Omitempty(t *testing.T) {
+	type A struct {
+		Name string `json:"name,omitempty"`
+		Age  int    `json:"age"`
+	}
+	a := A{Age: 18}
+	m := New(a, WithFields("name"), WithIgnoreZeroValue(), WithTagName("json")).Map()
+	if _, ok := m["name"]; ok {
 		t.Error("key [name] should exist")
 	}
 	if _, ok := m["age"]; ok {
