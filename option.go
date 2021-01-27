@@ -19,10 +19,18 @@ func WithTagName(tag string) Option {
 	}
 }
 
-// WithFields .
+// WithFields incloud only specified fields
 func WithFields(fields ...string) Option {
 	return func(s *Struct) *Struct {
 		s.fields = fields
+		return s
+	}
+}
+
+// WithIgnoreFields no incloud specified fields
+func WithIgnoreFields(fields ...string) Option {
+	return func(s *Struct) *Struct {
+		s.ignoreFields = fields
 		return s
 	}
 }

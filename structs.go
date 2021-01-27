@@ -21,8 +21,9 @@ type Struct struct {
 	value   reflect.Value
 	tagName string
 
-	ignoreZero bool
-	fields     tagOptions
+	ignoreZero   bool
+	fields       tagOptions
+	ignoreFields tagOptions
 }
 
 // New returns a new *Struct with the struct s. It panics if the s's kind is
@@ -116,6 +117,12 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 		if len(s.fields) != 0 {
 			s.ignoreZero = false
 			if !s.fields.Has(tagName) {
+				continue
+			}
+		}
+
+		if len(s.ignoreFields) != 0 {
+			if s.ignoreFields.Has(tagName) {
 				continue
 			}
 		}

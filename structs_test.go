@@ -1527,3 +1527,18 @@ func TestMap_Omitempty(t *testing.T) {
 		t.Error("key [age] should not exist")
 	}
 }
+
+func TestMap_WithIgnoreFields(t *testing.T) {
+	type A struct {
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+	}
+	a := A{Age: 18, Name: "a"}
+	m := New(a, WithIgnoreFields("age"), WithTagName("json")).Map()
+	if _, ok := m["name"]; !ok {
+		t.Error("key [name] should exist")
+	}
+	if _, ok := m["age"]; ok {
+		t.Error("key [age] should not exist")
+	}
+}

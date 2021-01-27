@@ -6,6 +6,7 @@
 - - `WithIgnoreZeroValue` field still exists when value is zero.
 - - `WithTagName` use custom tag name.
 - - `WithFields` specify the generated keys.
+- - `WithIgnoreFields` specify ignore keys.
 
 - - -
 - - - 
